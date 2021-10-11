@@ -1,32 +1,95 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-main>
+      <div class="home d-flex justify-center">
+        <div class="breakpoint bg_primary">
+          <v-app-bar color="#0E31D9" dark>
+            <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+          </v-app-bar>
+          <v-navigation-drawer v-model="drawer" absolute temporary>
+            <v-list nav dense>
+              <v-list-item-group>
+                <v-list-item
+                  active-class="deep-purple--text text--accent-4"
+                  link
+                  to="/"
+                >
+                  <v-list-item-icon>
+                    <v-icon>mdi-home</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>Home</v-list-item-title>
+                </v-list-item>
+
+                <v-list-item
+                  active-class="deep-purple--text text--accent--accent-4"
+                  link
+                  to="/sent-message"
+                >
+                  <v-list-item-icon>
+                    <v-icon>mdi-comment-check</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>Sent Message</v-list-item-title>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-navigation-drawer>
+          <router-view />
+        </div>
+      </div>
+    </v-main>
+  </v-app>
 </template>
 
+<script>
+export default {
+  name: "App",
+
+  data() {
+    return {
+      drawer: false,
+    };
+  },
+};
+</script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+.breakpoint {
+  width: 100%;
+}
+.bg_primary {
+  background: #eff1f9 !important;
+  min-height: 100vh;
+}
+.max_rounded {
+  border-radius: 10px !important;
+}
+/* input file custom */
+.upload-btn-wrapper {
+  width: max-content;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
 }
 
-#nav {
-  padding: 30px;
+.upload-btn-wrapper input[type="file"] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+@media (min-width: 576px) {
+  .breakpoint {
+    width: 50%;
+  }
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+@media (min-width: 768px) {
+  .breakpoint {
+    width: 40%;
+  }
+}
+@media (min-width: 992px) {
+  .breakpoint {
+    width: 30%;
+  }
 }
 </style>
