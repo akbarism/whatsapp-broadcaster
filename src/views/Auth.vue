@@ -1,5 +1,6 @@
 <template>
   <div class="d-flex flex-column justify-center align-center">
+
     <div
       v-if="!base64QR"
       class="d-flex flex-column justify-center align-center mt-5 pa-3"
@@ -70,6 +71,7 @@
 </template>
 
 <script>
+import firebase from "firebase";
 import QRCode from "qrcode";
 export default {
   name: "QRCODE",
@@ -85,19 +87,46 @@ export default {
       base64QR: null,
       counter: null,
       dialog: false,
+      file: null,
+      imgFile: null,
     };
   },
   mounted() {
     this.checkStatusDevice();
+    const uid = localStorage.getItem("uid");
+    if (!uid) {
+      this.anonymously();
+    }
   },
   methods: {
+    anonymously() {
+      firebase
+        .auth()
+        .signInAnonymously()
+        .then(() => {
+          firebase.auth().onAuthStateChanged((user) => {
+            localStorage.setItem("uid", user.uid);
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    onUpload() {
+      const storage = firebase
+        .storage()
+        .ref(`whatsapp_broadcaster/${this.file.name}`);
+      storage.put(this.file).then(() => {
+        storage.getDownloadURL().then((url) => {
+          this.imgFile = url;
+        });
+      });
+    },
     generatQr() {
       this.generating = true;
-      // this.base64QR = null;
       this.$store
         .dispatch("getQr")
         .then((data) => {
-          console.log(data);
           this.generating = false;
           this.displayQr(data.qr_code);
         })
@@ -123,7 +152,6 @@ export default {
       }, 2000);
     },
     checkStatusDevice(second, reconnect) {
-      console.log(second);
       this.counter = second;
       this.$store.dispatch("getDevice").then((data) => {
         if (data.status == "connected") {
@@ -139,12 +167,12 @@ export default {
               this.generatQr();
             }
           } else {
-              if (second >= 7) {
-                clearInterval(this.checkConnection);
-                this.dialog = true;
-                this.reconnecting = false;
-              }
+            if (second >= 7) {
+              clearInterval(this.checkConnection);
+              this.dialog = true;
+              this.reconnecting = false;
             }
+          }
         }
       });
     },
@@ -153,8 +181,7 @@ export default {
       let data = {
         device_id: "xiamoi-kentang",
       };
-      this.$store.dispatch("reconnect", data).then((data) => {
-        console.log(data);
+      this.$store.dispatch("reconnect", data).then(() => {
         this.isConnected(true);
       });
     },

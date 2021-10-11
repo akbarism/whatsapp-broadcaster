@@ -1,6 +1,14 @@
 <template>
   <div>
     <div class="pa-3 mt-3">
+      <div class="pa-3">
+        <v-file-input
+          accept="image/*"
+          v-model="file"
+          @change="onUpload"
+          label="File input"
+        ></v-file-input>
+      </div>
       <v-card flat class="max_rounded pa-3">
         <v-textarea
           v-model="content"
@@ -39,6 +47,7 @@
 
 <script>
 import { mapState } from "vuex";
+import firebase from "firebase";
 export default {
   name: "generatelist",
   computed: {
@@ -53,10 +62,25 @@ export default {
       isIntervaled: false,
       dialog: false,
       count: null,
+      imgFile: null,
     };
   },
   mounted() {},
   methods: {
+    onUpload() {
+      const ref = `whatsapp_broadcaster/${this.file.name}`;
+      const storage = firebase.storage().ref(ref);
+      storage.put(this.file).then(() => {
+        storage.getDownloadURL().then((url) => {
+          this.imgFile = url;
+          let file = {
+            ref: ref,
+            url: url,
+          };
+          localStorage.setItem("file", JSON.stringify(file));
+        });
+      });
+    },
     broadcast() {
       this.dialog = true;
       let i = 0;
@@ -87,6 +111,10 @@ export default {
           this.count = i + 1;
           if (!this.isIntervaled) {
             let today = this.$date().format("YYYY-MM-DD");
+            let file = localStorage.getItem("file");
+            if (file) {
+              localStorage.removeItem("file");
+            }
             this.content = "";
             this.$router.push(`/recent-sent/${today}`);
           }

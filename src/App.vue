@@ -79,17 +79,17 @@ export default {
 }
 @media (min-width: 576px) {
   .breakpoint {
-    width: 50%;
+    width: 400px;
   }
 }
 @media (min-width: 768px) {
   .breakpoint {
-    width: 40%;
+    width: 400px;
   }
 }
 @media (min-width: 992px) {
   .breakpoint {
-    width: 30%;
+    width: 400px;
   }
 }
 </style>
