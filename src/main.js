@@ -7,14 +7,15 @@ import "./plugins/Dayjs";
 import firebase from "firebase";
 import "firebase/firestore";
 import "firebase/storage";
-const firebaseConfig = {
-  apiKey: "AIzaSyDUIrRMTSTJ4BnfGWBHCGhg7E5-8CTP8Nk",
-  authDomain: "image-saver-89e43.firebaseapp.com",
-  projectId: "image-saver-89e43",
-  storageBucket: "image-saver-89e43.appspot.com",
-  messagingSenderId: "31186518176",
-  appId: "1:31186518176:web:7c96090962c5a0dfcd49c5"
-};
+import firebaseConfig from './plugins/firebase/config'
+// const firebaseConfig = {
+//   apiKey: process.env.VUE_APP_apiKey,
+//   authDomain: process.env.VUE_APP_authDomain,
+//   projectId: process.env.VUE_APP_projectId,
+//   storageBucket: process.env.VUE_APP_storageBucket,
+//   messagingSenderId: process.env.VUE_APP_messagingSenderId,
+//   appId: process.env.VUE_APP_appId
+// };
 firebase.initializeApp(firebaseConfig);
 
 Vue.config.productionTip = false;

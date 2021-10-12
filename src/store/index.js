@@ -48,6 +48,7 @@ export default new Vuex.Store({
         let config = {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         };
         axios
@@ -69,6 +70,7 @@ export default new Vuex.Store({
         let config = {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         };
         axios
@@ -90,6 +92,7 @@ export default new Vuex.Store({
         let config = {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         };
         axios
@@ -111,6 +114,7 @@ export default new Vuex.Store({
         let config = {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         };
         axios
@@ -132,6 +136,7 @@ export default new Vuex.Store({
         let config = {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         };
         let meta = data.meta ? `start_key=${data.meta}` : ``;
@@ -162,6 +167,7 @@ export default new Vuex.Store({
         let config = {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         };
         axios

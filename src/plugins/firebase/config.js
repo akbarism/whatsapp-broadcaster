@@ -1,10 +1,8 @@
 export default {
-  apiKey: "AIzaSyBPBXg8e7lvk0YOwb63XAx4lepJTxjo820",
-  authDomain: "mybee-b55b3.firebaseapp.com",
-  databaseURL: "https://mybee-b55b3.firebaseio.com",
-  projectId: "mybee-b55b3",
-  storageBucket: "mybee-b55b3.appspot.com",
-  messagingSenderId: "970900064629",
-  appId: "1:970900064629:web:d7b484d2747ea414bf6b3c",
-  measurementId: "G-YWGB1NM1YR",
+  apiKey: "AIzaSyDUIrRMTSTJ4BnfGWBHCGhg7E5-8CTP8Nk",
+  authDomain: "image-saver-89e43.firebaseapp.com",
+  projectId: "image-saver-89e43",
+  storageBucket: "image-saver-89e43.appspot.com",
+  messagingSenderId: "31186518176",
+  appId: "1:31186518176:web:7c96090962c5a0dfcd49c5",
 };

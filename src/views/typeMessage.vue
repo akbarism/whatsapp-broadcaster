@@ -1,14 +1,29 @@
 <template>
   <div>
     <div class="pa-3 mt-3">
-      <div class="pa-3">
+      <!-- <div class="pa-3">
         <v-file-input
-          accept="image/*"
+          accept="image/png, image/gif, image/jpeg"
           v-model="file"
           @change="onUpload"
           label="File input"
         ></v-file-input>
-      </div>
+      </div> -->
+      <!-- <div v-if="urlImg" class="pa-3">
+        <div style="position: relative">
+          <v-btn
+            fab
+            depressed
+            x-small
+            color="red"
+            dark
+            style="position: absolute; right: -10px; top: -20px"
+            @click="deleteImage"
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
+        </div>
+        <img :src="urlImg" width="100%" alt="" />
+      </div> -->
       <v-card flat class="max_rounded pa-3">
         <v-textarea
           v-model="content"
@@ -42,6 +57,25 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialog" persistent max-width="300">
+      <v-card>
+        <v-card-text>
+          <div class="d-flex justify-center align-center" style="height: 200px">
+            <div>
+              <b>Sedang Mengirim {{ count }} pesan...</b>
+              <v-progress-linear
+                indeterminate
+                color="#0E31D9"
+              ></v-progress-linear>
+              <p class="red--text text-center mt-5">
+                Dimohon untuk tidak merefresh atau close halaman saat proses
+                pengiriman masih berlangsung
+              </p>
+            </div>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -49,7 +83,7 @@
 import { mapState } from "vuex";
 import firebase from "firebase";
 export default {
-  name: "generatelist",
+  name: "typemsg",
   computed: {
     ...mapState({
       list: (state) => state.listNumber,
@@ -62,32 +96,74 @@ export default {
       isIntervaled: false,
       dialog: false,
       count: null,
-      imgFile: null,
+      file: null,
+      urlImg: null,
     };
   },
-  mounted() {},
+  mounted() {
+    let file = JSON.parse(localStorage.getItem("file"));
+    if (file) {
+      this.urlImg = file.url;
+    }
+  },
   methods: {
     onUpload() {
       const ref = `whatsapp_broadcaster/${this.file.name}`;
-      const storage = firebase.storage().ref(ref);
-      storage.put(this.file).then(() => {
-        storage.getDownloadURL().then((url) => {
-          this.imgFile = url;
-          let file = {
-            ref: ref,
-            url: url,
-          };
-          localStorage.setItem("file", JSON.stringify(file));
+      const storage = firebase.storage().ref();
+      storage
+        .child(ref)
+        .put(this.file)
+        .then((snapshot) => {
+          console.log(snapshot);
+          storage
+            .child(ref)
+            .getDownloadURL()
+            .then((url) => {
+              this.urlImg = url;
+              let file = {
+                ref: ref,
+                url: url,
+              };
+              localStorage.setItem("file", JSON.stringify(file));
+            });
+        })
+        .catch((err) => {
+          console.log(err);
         });
+    },
+    deleteImage() {
+      let ref = JSON.parse(localStorage.getItem("file")).ref;
+      const storage = firebase.storage().ref().child(ref);
+      storage.delete().then(() => {
+        localStorage.removeItem("file");
+        this.urlImg = null;
       });
     },
     broadcast() {
       this.dialog = true;
+      let body = {};
+
       let i = 0;
       let loop = null;
       this.isIntervaled = true;
       loop = setInterval(() => {
-        this.send(this.list[i], i);
+        if (this.urlImg) {
+          body = {
+            phone_number: this.list[i],
+            message: `${this.urlImg}`,
+            caption: this.content,
+            device_id: "xiamoi-kentang",
+            message_type: "image",
+          };
+        } else {
+          body = {
+            phone_number: this.list[i],
+            message: this.content,
+            device_id: "xiamoi-kentang",
+            message_type: "text",
+          };
+        }
+        this.send(body, this.list[i], i);
         i++;
         if (i == this.list.length) {
           clearInterval(loop);
@@ -97,26 +173,21 @@ export default {
         }
       }, 3000);
     },
-    send(ppl, i) {
+    send(body, ppl, i) {
       console.log(ppl);
-      let data = {
-        phone_number: ppl,
-        message: this.content,
-        device_id: "xiamoi-kentang",
-        message_type: "text",
-      };
       this.$store
-        .dispatch("sendMsg", data)
+        .dispatch("sendMsg", body)
         .then(() => {
           this.count = i + 1;
           if (!this.isIntervaled) {
-            let today = this.$date().format("YYYY-MM-DD");
+            // let today = this.$date().format("YYYY-MM-DD");
             let file = localStorage.getItem("file");
             if (file) {
               localStorage.removeItem("file");
+              this.urlImg = null;
             }
             this.content = "";
-            this.$router.push(`/recent-sent/${today}`);
+            this.$router.push(`/sent-message`);
           }
         })
         .catch((err) => {
