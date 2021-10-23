@@ -182,6 +182,21 @@ export default new Vuex.Store({
           });
       });
     },
+    check(context, data) {
+      return new Promise((resolve, reject) => {
+        let env = "http://localhost:3000/save";
+        axios
+          .post(env, data)
+          .then((res) => {
+            let data = res.data;
+            context.commit("RES_MSG", data);
+            resolve(data);
+          })
+          .catch((error) => {
+            reject(error.response.data);
+          });
+      });
+    },
   },
   modules: {},
 });

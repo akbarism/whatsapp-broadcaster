@@ -35,6 +35,11 @@ const routes = [
     name: "recentSent",
     component: () => import("../views/listRecentSent.vue"),
   },
+  {
+    path: "/tes",
+    name: "tes",
+    component: () => import("../views/test.vue"),
+  },
 ];
 
 const router = new VueRouter({

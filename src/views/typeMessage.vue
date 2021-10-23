@@ -24,6 +24,7 @@
         </div>
         <img :src="urlImg" width="100%" alt="" />
       </div> -->
+      <v-text-field label="link" v-model="link"></v-text-field>
       <v-card flat class="max_rounded pa-3">
         <v-textarea
           v-model="content"
@@ -98,6 +99,7 @@ export default {
       count: null,
       file: null,
       urlImg: null,
+      link: '',
     };
   },
   mounted() {

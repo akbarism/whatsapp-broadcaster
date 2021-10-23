@@ -7,15 +7,11 @@ import "./plugins/Dayjs";
 import firebase from "firebase";
 import "firebase/firestore";
 import "firebase/storage";
-import firebaseConfig from './plugins/firebase/config'
-// const firebaseConfig = {
-//   apiKey: process.env.VUE_APP_apiKey,
-//   authDomain: process.env.VUE_APP_authDomain,
-//   projectId: process.env.VUE_APP_projectId,
-//   storageBucket: process.env.VUE_APP_storageBucket,
-//   messagingSenderId: process.env.VUE_APP_messagingSenderId,
-//   appId: process.env.VUE_APP_appId
-// };
+import firebaseConfig from "./plugins/firebase/config";
+import VueApexCharts from "vue-apexcharts";
+Vue.use(VueApexCharts);
+
+Vue.component('apexchart', VueApexCharts)
 firebase.initializeApp(firebaseConfig);
 
 Vue.config.productionTip = false;
